@@ -1,0 +1,17 @@
+
+/.vs
+
+#pixile
+/Studio
+imgui.ini
+*[0-9].pxl
+*[0-9].pss
+*.pxm
+
+#KiCad
+*.sch-bak
+*.kicad_pcb-bak
+*-rescue.lib
+*-rescue.dcm
+fp-info-cache
+sym-lib-table
