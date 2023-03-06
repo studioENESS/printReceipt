@@ -1,10 +1,11 @@
 #include <iostream>
-
 #include <windows.h>
 #include <wincon.h>
 #include <winspool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <json.hpp>
+
 
 // Use printReceipt printerName, paperWidth, paperLength, filePath
 // printReceipt "Brother TD-4420DN" 580 2200 "C:\Users\bruno\OneDrive\Desktop\Untitled-1.pdf"
