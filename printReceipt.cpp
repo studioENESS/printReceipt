@@ -4,20 +4,49 @@
 #include <winspool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <json.hpp>
+#include <fstream>
+#include <nlohmann/json.hpp>
 
+using json = nlohmann::json;
 
 // Use printReceipt printerName, paperWidth, paperLength, filePath
 // printReceipt "Brother TD-4420DN" 580 2200 "C:\Users\bruno\OneDrive\Desktop\Untitled-1.pdf"
 
+// printReceipt 5
+
 int main(int argc, char** argv)
 {	
-	if (argc != 5) return 1;
+	if (argc != 2) return 1;
+	int quoteID = atoi(argv[1]);
+	srand(time(NULL));
+	if (quoteID == 0) quoteID = rand() % 54 + 2;
+	int paperWidth, paperLength = 0;
+	std::string fileName;
 
-	char* printerName = argv[1];
-	int paperWidth = atoi(argv[2]);
-	int paperLength = atoi(argv[3]);
-	const char* filePath = argv[4];
+	std::ifstream f("quotes.json");
+	json j = json::parse(f);
+
+	std::string printer = j["settings"]["printer"];
+	std::string fileLoc = j["settings"]["fileLocation"];
+
+	char* printerName = (char*)printer.c_str();
+
+	bool notFound = true;
+	for (auto c : j["quotes"]) {
+		if (c["id"] == quoteID) {
+			notFound = false;
+			//std::cout << c;
+			paperWidth = c["width"];
+			paperLength = c["length"];
+			fileName = c["filename"];
+			break;
+		}
+	}
+
+	if (notFound) return 2;
+
+	std::string fp = fileLoc + "\\" + fileName;
+	const char* filePath = fp.c_str();
 
 	PRINTER_DEFAULTS pd;
 	ZeroMemory(&pd, sizeof(pd));
