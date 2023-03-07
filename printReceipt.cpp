@@ -23,11 +23,13 @@ int main(int argc, char** argv)
 
 	int quoteID = atoi(argv[1]);
 
+	/*
 	if (quoteID == 0) {
 		srand(time(NULL));
 		quoteID = rand() % 54 + 2;
 	}
-
+	*/
+	
 	int paperWidth, paperLength = 0;
 	std::string fileName;
 
@@ -38,8 +40,15 @@ int main(int argc, char** argv)
 
 	char* printerName = (char*)printer.c_str();
 
+	auto e = j["quotes"];
+	
+	if (quoteID < 0) {
+		e = j["dinkus"];
+		quoteID = abs(quoteID);
+	}
+
 	bool notFound = true;
-	for (auto c : j["quotes"]) {
+	for (auto c : e) {
 		if (c["id"] == quoteID) {
 			notFound = false;
 			//std::cout << c;
