@@ -16,7 +16,11 @@ using json = nlohmann::json;
 
 int main(int argc, char** argv)
 {	
-	if (argc != 2) return 1;
+	if (argc != 2) {
+		printf("Failed to process arguments...\n");
+		return 1;
+	}
+
 	int quoteID = atoi(argv[1]);
 
 	if (quoteID == 0) {
@@ -46,8 +50,11 @@ int main(int argc, char** argv)
 		}
 	}
 
-	if (notFound) return 2;
-
+	if (notFound) {
+		printf("Failed to find quote...\n");
+		return 2;
+	}
+	
 	std::string fp = fileLoc + "\\" + fileName;
 	const char* filePath = fp.c_str();
 
@@ -59,7 +66,22 @@ int main(int argc, char** argv)
 	auto res = OpenPrinter(printerName, &print_handle, &pd);
 	if (print_handle == 0) {
 		printf("Failed to open printer...\n");
-		return 1;
+		return 3;
+	}
+
+	// Check print queue...
+	DWORD dwBufsize = 0;
+	GetPrinter(print_handle, 2, NULL, 0, &dwBufsize);
+
+	PRINTER_INFO_2* pinfo = (PRINTER_INFO_2*)malloc(dwBufsize);
+	long result = GetPrinter(print_handle, 2, (LPBYTE)pinfo, dwBufsize, &dwBufsize);
+	DWORD numJobs = pinfo->cJobs;
+	free(pinfo);//free now
+
+	std::cout << numJobs;
+	if (numJobs > 0) {
+		printf("There are still jobs in the queue...\n");
+		return 4;
 	}
 
 	PRINTER_INFO_2* pi2 = NULL;
@@ -76,7 +98,7 @@ int main(int argc, char** argv)
 		{
 			GlobalFree(pi2);
 			ClosePrinter(print_handle);
-			return 1;
+			return 4;
 		}
 
 		auto pDevMode = (DEVMODE*)GlobalAlloc(GPTR, dwNeeded);
@@ -84,7 +106,7 @@ int main(int argc, char** argv)
 		{
 			GlobalFree(pi2);
 			ClosePrinter(print_handle);
-			return 1;
+			return 4;
 		}
 
 		auto lFlag = DocumentProperties(NULL, print_handle,
@@ -96,7 +118,7 @@ int main(int argc, char** argv)
 			GlobalFree(pDevMode);
 			GlobalFree(pi2);
 			ClosePrinter(print_handle);
-			return 1;
+			return 4;
 		}
 		pi2->pDevMode = pDevMode;
 	}
