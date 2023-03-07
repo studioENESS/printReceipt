@@ -18,14 +18,17 @@ int main(int argc, char** argv)
 {	
 	if (argc != 2) return 1;
 	int quoteID = atoi(argv[1]);
-	srand(time(NULL));
-	if (quoteID == 0) quoteID = rand() % 54 + 2;
+
+	if (quoteID == 0) {
+		srand(time(NULL));
+		quoteID = rand() % 54 + 2;
+	}
+
 	int paperWidth, paperLength = 0;
 	std::string fileName;
 
 	std::ifstream f("quotes.json");
 	json j = json::parse(f);
-
 	std::string printer = j["settings"]["printer"];
 	std::string fileLoc = j["settings"]["fileLocation"];
 

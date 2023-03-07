@@ -1,16 +1,19 @@
 # printReceipt
 
-A console application that prints a given file to a roll printer.
-It sets paper size programaticcaly.
+A console application that prints a [guru](https://github.com/studioENESS/2307_Modern-Guru) quote to a thermal roll printer.
 
 ## How to use
 
-    printReceipt "Brother TD-4420DN" 800 2000 "C:\Users\bruno\OneDrive\Desktop\guru_printer\80x200.pdf"
+    printReceipt `QuoteID` 
 
-### Notes
+> Quote ID `0` will print a random quote
+> Quote ID `1` is the Dinkus
 
-Spool files on windows are located at
+## Error Codes
 
-    C:\Windows\System32\spool\PRINTERS
+  1. Not the right amount of command arguments
+  2. Quote ID not found
+
+
 
 ![preview](img/eness_logo.png)
