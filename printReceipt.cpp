@@ -23,13 +23,11 @@ int main(int argc, char** argv)
 
 	int quoteID = atoi(argv[1]);
 
-	/*
 	if (quoteID == 0) {
 		srand(time(NULL));
 		quoteID = rand() % 54 + 2;
 	}
-	*/
-	
+
 	int paperWidth, paperLength = 0;
 	std::string fileName;
 
@@ -153,7 +151,7 @@ int main(int argc, char** argv)
 
 	SetPrinter(print_handle, 2, (LPBYTE)pi2, 0);
 
-	ShellExecute(NULL, "print", filePath, NULL, NULL, 0);
+	ShellExecute(NULL, "PDFtoPrinter", filePath, NULL, NULL, 0);
 	ClosePrinter(print_handle);
 
 	return 0;
