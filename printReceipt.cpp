@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <fstream>
+#include <direct.h>
 #include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
@@ -151,7 +152,44 @@ int main(int argc, char** argv)
 
 	SetPrinter(print_handle, 2, (LPBYTE)pi2, 0);
 
-	ShellExecute(NULL, "PDFtoPrinter", filePath, NULL, NULL, 0);
+	//ShellExecute(NULL, "PDFtoPrinter", filePath, NULL, fileLoc.c_str(), 0);
+	STARTUPINFOA si;
+	PROCESS_INFORMATION pi;
+
+
+	ZeroMemory(&si, sizeof(si));
+	si.cb = sizeof(si);
+	ZeroMemory(&pi, sizeof(pi));
+	//std::string cmdPath = _getcwd(); 
+
+	char pPath[MAX_PATH];
+	_getcwd(pPath, MAX_PATH);
+
+	std::string cmdLine = pPath;
+	cmdLine.append("\\PDFtoPrinter.exe ");
+	cmdLine.append(filePath);
+	//const std::wstring wcmd = cmdLine;
+	LPSTR cmd = (char*)cmdLine.data();
+
+	// Start the child process.
+	if (!CreateProcessA(NULL,   // No module name (use command line)
+		cmd,        // Command line
+		NULL,           // Process handle not inheritable
+		NULL,           // Thread handle not inheritable
+		FALSE,          // Set handle inheritance to FALSE
+		0,              // No creation flags
+		NULL,           // Use parent's environment block
+		pPath,           // Use parent's starting directory
+		&si,            // Pointer to STARTUPINFO structure
+		&pi)           // Pointer to PROCESS_INFORMATION structure
+		)
+	{
+		printf("CreateProcess failed (%d).\n", GetLastError());
+		//return false;
+	}
+
+	CloseHandle(pi.hProcess);
+	CloseHandle(pi.hThread);
 	ClosePrinter(print_handle);
 
 	return 0;
