@@ -17,6 +17,8 @@ using json = nlohmann::json;
 
 int main(int argc, char** argv)
 {	
+	int err = 0;
+
 	if (argc != 2) {
 		printf("Failed to process arguments...\n");
 		return 1;
@@ -106,6 +108,7 @@ int main(int argc, char** argv)
 		{
 			GlobalFree(pi2);
 			ClosePrinter(print_handle);
+			printf("111 - DocumentProperties(NULL, print_handle\n");
 			return 4;
 		}
 
@@ -114,6 +117,7 @@ int main(int argc, char** argv)
 		{
 			GlobalFree(pi2);
 			ClosePrinter(print_handle);
+			printf("120 (DEVMODE*)GlobalAlloc(GPTR, dwNeeded)...\n");
 			return 4;
 		}
 
@@ -125,6 +129,7 @@ int main(int argc, char** argv)
 		{
 			GlobalFree(pDevMode);
 			GlobalFree(pi2);
+			printf("132 Failed to set document properties...\n");
 			ClosePrinter(print_handle);
 			return 4;
 		}
@@ -146,6 +151,7 @@ int main(int argc, char** argv)
 	if (lFlag != IDOK)
 	{
 		GlobalFree(pi2);
+		printf("154 - Failed to update driver-dependent part of devmode...\n");
 		ClosePrinter(print_handle);
 		return 1;
 	}
@@ -185,12 +191,12 @@ int main(int argc, char** argv)
 		)
 	{
 		printf("CreateProcess failed (%d).\n", GetLastError());
-		//return false;
+		err = 3;
 	}
 
 	CloseHandle(pi.hProcess);
 	CloseHandle(pi.hThread);
 	ClosePrinter(print_handle);
 
-	return 0;
+	return err;
 }
