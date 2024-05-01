@@ -6,6 +6,8 @@ A console application that prints a [guru](https://github.com/studioENESS/2307_M
 
     printReceipt `QuoteID` 
 
+> Negative Quote ID's for Dinkus, 0 prints a random quote
+
 ## Error Codes
 
   1. Not the right amount of command arguments
